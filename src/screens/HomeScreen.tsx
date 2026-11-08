@@ -53,7 +53,7 @@ export const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           </View>
           <Text style={styles.heroTitle}>Learn. Practice. Understand. Achieve.</Text>
           <Text style={styles.heroSubtitle}>
-            Master complex mathematics from first principles. Visual derivations, deliberate practice, and 24/7 AI mentoring.
+            Master STEM (Physics, Chemistry & Math) from Class 8th to 12th, JEE & NEET from first principles. Visual derivations, deliberate practice, and 24/7 AI mentoring.
           </Text>
           <TouchableOpacity
             style={styles.heroCTA}
@@ -137,10 +137,10 @@ export const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
                     <Text style={styles.subjectTagText}>{course.subject}</Text>
                   </View>
                   <Text style={styles.courseTitle} numberOfLines={2}>
-                    {course.title}
+                    {typeof course.title === 'object' ? (course.title as any)?.rendered : (course.title || 'STEM Course')}
                   </Text>
                   <Text style={styles.courseExcerpt} numberOfLines={2}>
-                    {course.excerpt}
+                    {typeof course.excerpt === 'object' ? ((course.excerpt as any)?.rendered || '').replace(/<[^>]+>/g, '') : ((course.excerpt || '') as string).replace(/<[^>]+>/g, '')}
                   </Text>
                   <View style={styles.courseMeta}>
                     <View style={styles.metaItem}>
