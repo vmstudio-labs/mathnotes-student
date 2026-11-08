@@ -3,7 +3,7 @@ import { ApiService } from './apiService';
 
 export const GOOGLE_OAUTH_CONFIG = {
   // Replace with your Google Cloud Console Client IDs
-  webClientId: '1084293847291-mathnotes-web.apps.googleusercontent.com',
+  webClientId: '654288330427-ith2cd695btqp5bbso5eptm23g7db68r.apps.googleusercontent.com',
   iosClientId: '1084293847291-mathnotes-ios.apps.googleusercontent.com',
   androidClientId: '1084293847291-mathnotes-android.apps.googleusercontent.com',
   scopes: ['profile', 'email']
