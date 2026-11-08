@@ -107,36 +107,67 @@ export class ApiService {
   }
 
   private mapCourseFromWP(item: any): Course {
-    let subject: Course['subject'] = 'General Math';
+    let subject = 'General Math';
     let examTrack: ExamTrack = 'IIT_JEE_MAIN';
-    const title = item.title?.rendered || 'Untitled Course';
-    
-    if (title.toLowerCase().includes('calculus')) {
+    const rawTitle = typeof item.title === 'object' ? item.title?.rendered : item.title;
+    const title = (rawTitle || 'Untitled Course').replace(/&#038;/g, '&');
+    const lower = title.toLowerCase();
+
+    let defaultThumb = 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80';
+    let level = 'Class 11 & 12 / JEE';
+
+    if (lower.includes('physics') || lower.includes('à¤­à¥Œà¤¤à¤¿à¤•') || lower.includes('kinematics')) {
+      subject = 'Physics (à¤­à¥Œà¤¤à¤¿à¤• à¤µà¤¿à¤œà¥à¤žà¤¾à¤¨)';
+      examTrack = lower.includes('neet') ? 'NEET_UG' : 'IIT_JEE_MAIN';
+      defaultThumb = 'https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&w=600&q=80';
+      level = 'JEE & NEET Prep';
+    } else if (lower.includes('chemistry') || lower.includes('à¤°à¤¸à¤¾à¤¯à¤¨') || lower.includes('bonding')) {
+      subject = 'Chemistry (à¤°à¤¸à¤¾à¤¯à¤¨ à¤µà¤¿à¤œà¥à¤žà¤¾à¤¨)';
+      examTrack = lower.includes('neet') ? 'NEET_UG' : 'IIT_JEE_MAIN';
+      defaultThumb = 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80';
+      level = 'Class 11 / JEE / NEET';
+    } else if (lower.includes('class 10') || lower.includes('à¤•à¤•à¥à¤·à¤¾ 10')) {
+      subject = 'Class 10th STEM';
+      examTrack = 'CLASS_10_BOARDS';
+      defaultThumb = 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=600&q=80';
+      level = 'Class 10th Boards';
+    } else if (lower.includes('class 8') || lower.includes('à¤•à¤•à¥à¤·à¤¾ 8')) {
+      subject = 'Class 8th Foundation';
+      examTrack = 'CLASS_8_FOUNDATION';
+      defaultThumb = 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80';
+      level = 'Class 8th Foundation';
+    } else if (lower.includes('calculus')) {
       subject = 'Calculus';
       examTrack = 'IIT_JEE_ADVANCED';
-    } else if (title.toLowerCase().includes('algebra')) {
+      level = 'JEE Advanced Tier';
+    } else if (lower.includes('algebra')) {
       subject = 'Algebra';
       examTrack = 'IIT_JEE_MAIN';
-    } else if (title.toLowerCase().includes('geometry') || title.toLowerCase().includes('vector')) {
+      level = 'JEE Main Tier';
+    } else if (lower.includes('geometry') || lower.includes('vector')) {
       subject = 'Coordinate Geometry';
       examTrack = 'IIT_JEE_MAIN';
+      level = 'JEE Main Tier';
     }
+
+    const rawExcerpt = typeof item.excerpt === 'object' ? item.excerpt?.rendered : item.excerpt;
+    const excerpt = (rawExcerpt || '').replace(/<[^>]+>/g, '').trim();
 
     return {
       id: item.id,
-      title: title.replace(/&#038;/g, '&'),
-      slug: item.slug,
-      excerpt: (item.excerpt?.rendered || '').replace(/<[^>]+>/g, '').trim(),
-      content: item.content?.rendered || '',
+      title,
+      slug: item.slug || course- + item.id,
+      excerpt,
+      content: typeof item.content === 'object' ? item.content?.rendered : (item.content || ''),
       price: 0,
       isFree: true,
-      level: 'JEE Advanced Tier',
+      level,
       subject,
       examTrack,
       instructor: {
         id: item.author || 2,
         name: 'Webxpro Digital',
-        designation: 'Ex-IITian Senior Math Faculty',
+        designation: 'Ex-IITian Senior STEM Faculty',
         avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
       },
       duration: '24h 00m',
@@ -145,7 +176,7 @@ export class ApiService {
       rating: 4.95,
       reviewsCount: 142,
       enrolledCount: 1240,
-      thumbnailUrl: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80',
+      thumbnailUrl: defaultThumb,
       topics: this.getTopicsForSubject(subject),
     };
   }
