@@ -5,10 +5,17 @@ export type UserRole = 'student' | 'instructor' | 'administrator';
 export type ExamTrack = 
   | 'IIT_JEE_MAIN' 
   | 'IIT_JEE_ADVANCED' 
-  | 'UPSC_CSAT' 
+  | 'NEET_UG'
   | 'CBSE_BOARDS' 
+  | 'CLASS_8_FOUNDATION'
+  | 'CLASS_9_FOUNDATION'
+  | 'CLASS_10_BOARDS'
+  | 'CLASS_11_SCIENCE'
+  | 'CLASS_12_TARGET'
+  | 'UPSC_CSAT' 
   | 'AI_AND_AUTOMATION' 
-  | 'OLYMPIAD_FOUNDATION';
+  | 'OLYMPIAD_FOUNDATION'
+  | string;
 
 export interface UserProfile {
   id: number;
@@ -54,8 +61,8 @@ export interface Course {
   thumbnailUrl?: string;
   price: number;
   isFree: boolean;
-  level: 'All Levels' | 'Beginner' | 'Intermediate' | 'Advanced' | 'JEE Advanced Tier';
-  subject: 'Calculus' | 'Algebra' | 'Coordinate Geometry' | 'AI & Python' | 'UPSC CSAT' | 'General Math';
+  level: string;
+  subject: string;
   examTrack: ExamTrack;
   instructor: {
     id: number;
