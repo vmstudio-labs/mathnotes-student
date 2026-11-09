@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ export const MathNotesAIScreen: React.FC = () => {
     {
       id: 'welcome',
       role: 'assistant',
-      content: `### Welcome to MathNotes AI! ðŸ“\n\nI am your 24/7 conceptual mathematics mentor, calibrated for **IIT-JEE (Main & Advanced), UPSC CSAT, CBSE Class 12, and AI Mathematics**.\n\nUse the **Camera ðŸ“¸** below to **Snap & Solve** any math problem, or ask me about proofs, derivations, or exam shortcuts!`,
+      content: `### Welcome to MathNotes AI! ðŸ“\n\nI am your 24/7 conceptual mathematics mentor, calibrated for **STEM (Physics, Chemistry & Math) for Class 8th to 12th, IIT-JEE, NEET UG, and UPSC CSAT**.\n\nUse the **Camera ðŸ“¸** below to **Snap & Solve** any math problem, or ask me about proofs, derivations, or exam shortcuts!`,
       timestamp: new Date().toISOString(),
       suggestedFollowups: botConfig.starters
     }
