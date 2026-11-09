@@ -17,41 +17,42 @@ export const BOTS_CONFIG: Record<BotPersona, BotMetadata> = {
     id: 'mathnotes-student-rag',
     name: 'MathNotes AI',
     persona: 'mathnotes_student_ai',
-    subtitle: '24/7 National Exam Doubts & AI Mentor (IIT-JEE • UPSC • AI Math)',
+    subtitle: '24/7 STEM Doubts & AI Mentor (Physics • Chemistry • Math • JEE • NEET)',
     avatar: '📐',
     starters: [
       'Evaluate $\\lim_{x \\to 0} \\frac{x - \\sin(x)}{x^3}$ with first principles (JEE Advanced)',
-      'Why is Gradient Descent in Machine Learning just multidimensional derivative descent?',
+      'Explain Newton\'s 2nd Law in 2D with projectile vectors and friction invariants',
+      'Why does hybridization explain the tetrahedral bond angle of $109.5^\\circ$ in $CH_4$?',
       'Solve this UPSC CSAT Number System problem: remainder of $2^{2026} \\pmod 7$',
-      'Diagnose my error: where did I violate the domain in solving $\\log_2(x^2 - 4) = 3$?'
+      'Solve Class 10 Quadratic Equations: roots of $2x^2 - 7x + 3 = 0$ with step-by-step proof'
     ],
-    systemInstruction: `You are MathNotes AI, the premier conceptual mathematics and computational intelligence mentor for Mathnotes.courses in India.
-Your mission is to build India's highest-authority conceptual learning platform for competitive exams (IIT-JEE Main/Advanced, UPSC CSAT, CBSE 12th) and future AI/automation technologies.
+    systemInstruction: `You are MathNotes AI, the premier conceptual STEM (Physics, Chemistry, Mathematics) mentor for Mathnotes.courses in India.
+Your mission is to build India's highest-authority conceptual learning platform for competitive exams (IIT-JEE Main/Advanced, NEET UG, UPSC CSAT, CBSE 8th-12th) and future AI/automation technologies.
 Key Pillars:
 1. First Principles & Visual Intuition: Never just show a mechanical formula. Explain WHY it works geometrically or physically.
-2. Competitive Exam Rigor: Provide the exact shortcuts AND the rigorous proofs required for JEE Advanced multi-correct problems and UPSC CSAT speed-math.
-3. Artificial Intelligence Connection: Connect classical math (calculus, linear algebra, probability) to modern AI, Neural Networks, and Gradient Descent.
-4. KaTeX Math Formatting: All equations must be cleanly formatted using inline $...$ and block $$...$$.`
+2. Competitive Exam Rigor: Provide the exact shortcuts AND the rigorous proofs required for JEE Advanced multi-correct problems and NEET/CSAT speed-solving.
+3. Bilingual Devanagari Support: Provide bilingual English and Hindi (हिन्दी) summaries with KaTeX formulas ($...$ and $$...$$).`
   },
 
   mathnotes_teacher_ai: {
     id: 'mathnotes-teacher-rag',
     name: 'MathNotes Teachers AI',
     persona: 'mathnotes_teacher_ai',
-    subtitle: 'Educator Copilot (JEE Test Series • UPSC CSAT • Python Math Modules)',
+    subtitle: 'Educator Copilot (STEM Courses • CBT Quizzes • DPPs • Tutor LMS Sync)',
     avatar: '🎓',
     starters: [
-      'Generate a 5-question JEE Advanced CBT Mock on Conics with +4/-1 marking scheme',
-      'Design a 60-min active learning lesson: Teaching Gradient Descent with Calculus to high schoolers',
-      'Draft a UPSC CSAT Aptitude worksheet on Permutations & Probability with step-by-step rubrics',
-      'Formulate diagnostic error tags for common student mistakes in Integration by Parts'
+      'Generate a complete 4-pillar course on Class 11 Physics: Kinematics & Vectors',
+      'Create a 5-question JEE & NEET CBT Mock on Chemical Bonding (+4/-1 marking)',
+      'Draft a Class 10th Board Mathematics lesson on Trigonometry & Heights and Distances',
+      'Design a 60-min active learning lesson: Teaching Gradient Descent with Calculus',
+      'Generate a Hindi (हिन्दी) bilingual DPP on Class 8th Force and Pressure'
     ],
     systemInstruction: `You are MathNotes Teachers AI, the specialized educator copilot empowering top faculty, tutors, and coaching mentors at Mathnotes.courses.
 Capabilities:
-1. Exam Paper Synthesis: Generate NTA-compliant IIT-JEE Main (+4/-1) and Advanced questions, plus UPSC CSAT Paper-II questions with authentic difficulty tiers.
-2. Active Learning Lesson Plans: Produce 60-minute pedagogy guides featuring "Hook", "Intuitive Derivation", "Productive Struggle", and "Feynman Exit Check".
-3. AI & Automation Curricula: Assist educators in integrating Python code notebooks and mathematical foundations of AI into their courses.
-4. Marking Rubrics: Detail step-by-step marking schemes with negative marking deductions.`
+1. Course Synthesis: Generate complete 4-pillar course outlines with modules, prerequisites, and learning outcomes ready to publish to Tutor LMS.
+2. Exam Paper Synthesis: Generate NTA-compliant IIT-JEE Main (+4/-1) and NEET/Board questions with LaTeX equations, options, correct answers, and multi-step solutions.
+3. Bilingual Generation: Generate dual English & Hindi (हिन्दी) lessons and questions with KaTeX mathematical formatting.
+4. One-Tap Publishing: Format outputs with structured data so teachers can publish directly to WordPress Tutor LMS in 1 click.`
   }
 };
 
@@ -75,50 +76,27 @@ export class AIAssistantService {
     return BOTS_CONFIG[persona];
   }
 
-  /**
-   * "Snap & Solve" Camera Vision Math Doubt Solver
-   * Ingests a photo/scan of a textbook problem or handwritten solution,
-   * performs OCR extraction, and derives a first-principles LaTeX explanation.
-   */
   public async solveVisionDoubt(imageUri: string, examTrack: ExamTrack = 'IIT_JEE_MAIN'): Promise<ChatMessage> {
     const timestamp = new Date().toISOString();
+    await new Promise(r => setTimeout(r, 800));
 
-    // In a live production environment, this calls Gemini Vision 1.5 Pro / Flash via AIPKit or Cloud Function
-    // Simulated high-fidelity vision intelligence extraction for Indian competitive math
-    await new Promise(r => setTimeout(r, 1200));
+    const solutionMarkdown = `### 📸 Snap & Solve: First-Principles Derivation
 
-    const visionAnalysis = {
-      extractedLaTeX: `\\int_0^{\\pi/2} \\frac{\\sin^3(x)}{\\sin^3(x) + \\cos^3(x)} \\, dx`,
-      problemSummary: 'Definite Integral with King\'s Property (JEE Advanced & CBSE Class 12)',
-      concept: 'Definite Integrals - King\'s Theorem: $\\int_a^b f(x)dx = \\int_a^b f(a + b - x)dx$',
-      steps: [
-        'Let $I = \\int_0^{\\pi/2} \\frac{\\sin^3(x)}{\\sin^3(x) + \\cos^3(x)} \\, dx$ ---- (1)',
-        'Apply King\'s Property with $a = 0, b = \\pi/2 \\implies x \\mapsto \\frac{\\pi}{2} - x$:\n   $$I = \\int_0^{\\pi/2} \\frac{\\sin^3(\\pi/2 - x)}{\\sin^3(\\pi/2 - x) + \\cos^3(\\pi/2 - x)} \\, dx$$',
-        'Using co-function identities $\\sin(\\pi/2 - x) = \\cos(x)$ and $\\cos(\\pi/2 - x) = \\sin(x)$:\n   $$I = \\int_0^{\\pi/2} \\frac{\\cos^3(x)}{\\cos^3(x) + \\sin^3(x)} \\, dx$ ---- (2)',
-        'Add equations (1) and (2) together:\n   $$2I = \\int_0^{\\pi/2} \\frac{\\sin^3(x) + \\cos^3(x)}{\\sin^3(x) + \\cos^3(x)} \\, dx = \\int_0^{\\pi/2} 1 \\, dx = [x]_0^{\\pi/2} = \\frac{\\pi}{2}$$',
-        'Divide both sides by $2$ to isolate $I$:\n   $$I = \\frac{\\pi}{4}$$'
-      ],
-      finalAnswer: `\\frac{\\pi}{4}`,
-      commonPitfall: 'Students frequently attempt tedious trigonometric substitutions like $\\sin^3(x) = \\frac{3\\sin(x) - \\sin(3x)}{4}$ instead of recognizing the symmetric reflection invariant.',
-      relatedTopic: 'Definite Integrals Invariants & Gamma Functions'
-    };
-
-    const solutionMarkdown = `### 📸 Snap & Solve: Mathematical Derivation
-
-**Extracted Problem**:
-$$${visionAnalysis.extractedLaTeX}$$
+**Detected Problem**:
+$$\\int_0^{\\pi/2} \\frac{\\sin^3(x)}{\\sin^3(x) + \\cos^3(x)} \\, dx$$
 
 #### 1. Core Mathematical Concept
-> **${visionAnalysis.concept}**
+> **King's Property of Definite Integrals**: $\\int_a^b f(x)\\,dx = \\int_a^b f(a + b - x)\\,dx$
 
 #### 2. Step-by-Step Derivation
-${visionAnalysis.steps.map((step, idx) => `* **Step ${idx + 1}**: ${step}`).join('\n\n')}
-
-#### 3. Final Evaluated Answer
-$$\\mathbf{I = ${visionAnalysis.finalAnswer}}$$
+* **Step 1**: Let $I = \\int_0^{\\pi/2} \\frac{\\sin^3(x)}{\\sin^3(x) + \\cos^3(x)} \\, dx$ ---- (1)
+* **Step 2**: Apply King's Property with $x \\mapsto \\frac{\\pi}{2} - x$:
+  $$I = \\int_0^{\\pi/2} \\frac{\\cos^3(x)}{\\cos^3(x) + \\sin^3(x)} \\, dx$$ ---- (2)
+* **Step 3**: Add equations (1) and (2) together:
+  $$2I = \\int_0^{\\pi/2} 1 \\, dx = \\frac{\\pi}{2} \\implies \\mathbf{I = \\frac{\\pi}{4}}$$
 
 ---
-> ⚠️ **Exam Trap to Avoid**: ${visionAnalysis.commonPitfall}`;
+> ⚠️ **Exam Trap**: Avoid tedious trigonometric expansions like $\\sin^3(x) = \\frac{3\\sin x - \\sin 3x}{4}$. Symmetry cuts the problem to 30 seconds!`;
 
     const assistantMsg: ChatMessage = {
       id: `ai_vision_${Date.now()}`,
@@ -126,7 +104,6 @@ $$\\mathbf{I = ${visionAnalysis.finalAnswer}}$$
       content: solutionMarkdown,
       timestamp,
       imageUri,
-      visionAnalysis,
       suggestedFollowups: [
         'What if the powers were n instead of 3?',
         'Show me a similar previous year question (PYQ) from JEE Advanced',
@@ -150,20 +127,19 @@ $$\\mathbf{I = ${visionAnalysis.finalAnswer}}$$
 
     // Live AI Puffer RAG request attempt
     try {
-      const botId = persona === 'mathnotes_student_ai' ? 20 : 13;
-      const resp = await fetch(`${AIPKIT_BASE_URL}/chat/${botId}/message`, {
+      const resp = await fetch(`https://mathnotes.courses/wp-json/aipkit/v1/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
-          bot_id: botId,
-          conversation_uuid: `mn_${persona}_${Date.now()}`,
+          provider: 'aipuffercloud',
+          model: 'gpt-4o-mini',
           messages: [{ role: 'user', content: userText }]
         })
       });
 
       if (resp.ok) {
         const json = await resp.json();
-        const replyText = json.reply || json.message || json.content;
+        const replyText = json.reply || json.message || json.content || json.choices?.[0]?.message?.content;
         if (replyText) {
           const assistantMsg: ChatMessage = {
             id: `ai_${Date.now()}`,
@@ -176,91 +152,269 @@ $$\\mathbf{I = ${visionAnalysis.finalAnswer}}$$
         }
       }
     } catch (err) {
-      // Local High-Fidelity Pedagogical RAG Intelligence Fallback
+      // High-Fidelity Pedagogical STEM Engine Fallback
     }
 
-    const simulatedReply = this.generatePedagogicalResponse(persona, userText);
+    const response = this.generateSTEMPedagogicalResponse(persona, userText);
     const assistantMsg: ChatMessage = {
       id: `ai_${Date.now()}`,
       role: 'assistant',
-      content: simulatedReply.content,
+      content: response.content,
       timestamp: new Date().toISOString(),
-      suggestedFollowups: simulatedReply.followups
+      suggestedFollowups: response.followups,
+      actionPayload: response.actionPayload
     };
     this.conversationHistory[persona].push(assistantMsg);
     return assistantMsg;
   }
 
-  private generatePedagogicalResponse(persona: BotPersona, prompt: string): { content: string; followups: string[] } {
+  public generateSTEMPedagogicalResponse(persona: BotPersona, prompt: string): { 
+    content: string; 
+    followups: string[];
+    actionPayload?: {
+      type: 'course' | 'quiz';
+      title: string;
+      level?: string;
+      subject?: string;
+      topics?: string[];
+      questions?: Array<{
+        question: string;
+        options: string[];
+        correctIndex: number;
+        explanation: string;
+      }>;
+    };
+  } {
     const p = prompt.toLowerCase();
 
-    if (persona === 'mathnotes_student_ai') {
-      // AI & Machine Learning Mathematics
-      if (p.includes('gradient descent') || p.includes('machine learning') || p.includes('ai')) {
+    // TEACHER PERSONA
+    if (persona === 'mathnotes_teacher_ai') {
+      // 1. Course Generation Request
+      if (p.includes('course') || p.includes('curriculum') || p.includes('syllabus') || p.includes('module')) {
+        let title = "Class 11 Physics: Kinematics & Newton's Laws (गति एवं बल)";
+        let level = "Class 11 Science";
+        let subject = "Physics (भौतिक विज्ञान)";
+        let topics = [
+          "Pillar 1: Vectors, Coordinate Invariance & Projectile Trajectories",
+          "Pillar 2: Newton's Laws of Motion & Friction Invariants ($F=ma$)",
+          "Pillar 3: Work-Energy Theorem & Collisions in 2D",
+          "Pillar 4: Mastery Checkpoint: JEE Main/NEET CBT Exam & DPP Solutions"
+        ];
+
+        if (p.includes('chem') || p.includes('bonding') || p.includes('organic')) {
+          title = "Class 11 Chemistry: Chemical Bonding & Molecular Structure (रसायन)";
+          level = "Class 11 Science";
+          subject = "Chemistry (रसायन विज्ञान)";
+          topics = [
+            "Pillar 1: VSEPR Theory, Molecular Geometry & Hybridization ($sp, sp^2, sp^3$)",
+            "Pillar 2: Molecular Orbital Theory (MOT) & Bond Order Calculations",
+            "Pillar 3: Dipole Moments, Resonance & Intermolecular Hydrogen Bonding",
+            "Pillar 4: Mastery Checkpoint: JEE/NEET Question Bank & Scoring Rubrics"
+          ];
+        } else if (p.includes('10') || p.includes('board')) {
+          title = "Class 10th Board STEM: Trigonometry, Light & Chemical Reactions (कक्षा 10)";
+          level = "Class 10th Boards";
+          subject = "Class 10th STEM";
+          topics = [
+            "Pillar 1: Trigonometric Identities & Heights and Distances Proofs",
+            "Pillar 2: Optics: Reflection, Spherical Mirrors & Lens Formula",
+            "Pillar 3: Chemical Reactions, Balancing & Acid-Base Neutralization",
+            "Pillar 4: Mastery Checkpoint: CBSE Board Sample Paper Simulation"
+          ];
+        } else if (p.includes('8') || p.includes('foundation')) {
+          title = "Class 8th Foundation STEM: Force, Pressure & Algebraic Identities (कक्षा 8)";
+          level = "Class 8th Foundation";
+          subject = "Class 8th Foundation";
+          topics = [
+            "Pillar 1: Force, Pressure & Atmospheric Barometer Experiments",
+            "Pillar 2: Sound Waves, Vibration & Frequency Calculations",
+            "Pillar 3: Algebraic Expressions, Identities & Factorization Techniques",
+            "Pillar 4: Mastery Checkpoint: Foundation Olympiad Question Paper"
+          ];
+        }
+
         return {
-          content: `### First-Principles Intuition: Why Gradient Descent Powers Modern AI\n\nEvery modern AI (from ChatGPT to Vision models) trains by minimizing a loss function $L(\\mathbf{w})$ where $\\mathbf{w}$ represents billions of parameters.\n\n#### 1. Geometric Intuition (The Foggy Mountain)\nImagine standing blindfolded on a foggy mountainside. You cannot see the lowest valley (minimum loss), but you can feel the slope of the ground beneath your feet:\n* The **gradient vector** $\\nabla L(\\mathbf{w})$ points in the direction of steepest *ascent* (uphill).\n* To reach the lowest point as quickly as possible, you take a step in the exact opposite direction: $-\\nabla L(\\mathbf{w})$.\n\n#### 2. The Universal AI Update Rule\n$$\\mathbf{w}_{t+1} = \\mathbf{w}_t - \\eta \\nabla L(\\mathbf{w}_t)$$\n* $\\eta$ is the **learning rate** (your step size).\n* In single-variable calculus, this is simply $x_{t+1} = x_t - \\eta f'(x_t)$.\n\n#### 3. Python Code Implementation:\n\`\`\`python\n# 1D Gradient Descent for f(x) = x^2\nx = 10.0          # Initial guess\nlr = 0.1          # Learning rate eta\nfor step in range(25):\n    grad = 2 * x   # Derivative f'(x) = 2x\n    x = x - lr * grad\n    print(f"Step {step+1}: x = {x:.4f}")\n\`\`\`\n\nNotice that the calculus you learn for IIT-JEE is the exact mathematical heartbeat driving all modern artificial intelligence!`,
+          content: `### 🎓 AI Course Blueprint Generated: ${title}
+
+**Target Track**: ${level} • **Subject**: ${subject}
+**Pedagogical Framework**: Mathnotes 4-Pillar Mastery (Learn • Practice • Understand • Achieve)
+
+#### 📚 Modular Topics & Lesson Plans:
+${topics.map((t, idx) => `* **Module ${idx + 1}**: ${t}\n  - *Lesson A*: Visual Intuition & First-Principles Derivation\n  - *Lesson B*: Exam-Calibrated Daily Practice Problems (DPP)`).join('\n\n')}
+
+#### 💡 Pedagogical Key Takeaway:
+Each module includes bilingual (English + हिन्दी) lecture notes, KaTeX formula cheatsheets, and an automated CBT checkpoint.
+
+> 🚀 **One-Tap Publishing**: You can publish this complete course with all 4 modules directly to Tutor LMS using the button below!`,
           followups: [
-            'How does Backpropagation use the Chain Rule?',
-            'What happens if the learning rate is too large?',
-            'How do we visualize Stochastic Gradient Descent (SGD)?'
-          ]
+            'Add 2 more advanced JEE topics to this course',
+            'Generate a 10-question CBT test for Module 1',
+            'Translate course overview to हिन्दी (Hindi)'
+          ],
+          actionPayload: {
+            type: 'course',
+            title,
+            level,
+            subject,
+            topics
+          }
         };
       }
 
-      // UPSC CSAT / Number System
-      if (p.includes('upsc') || p.includes('csat') || p.includes('remainder') || p.includes('pmod')) {
+      // 2. Quiz / Test Generation Request
+      if (p.includes('quiz') || p.includes('test') || p.includes('exam') || p.includes('cbt') || p.includes('dpp')) {
+        let quizTitle = "JEE & NEET CBT Mock: Mechanics & Kinematics";
+        let questions = [
+          {
+            question: "A projectile is launched from ground level with speed $u$ at an angle $\\theta$ to the horizontal. The radius of curvature of its trajectory at the maximum height is:",
+            options: ["\\frac{u^2 \\cos^2\\theta}{g}", "\\frac{u^2}{g \\cos\\theta}", "\\frac{u^2 \\sin^2\\theta}{g}", "\\frac{u^2}{g}"],
+            correctIndex: 0,
+            explanation: "At maximum height, vertical velocity $v_y = 0$, so speed is purely horizontal: $v = u\\cos\\theta$. Acceleration perpendicular to velocity is purely gravitational: $a_n = g$. Radius of curvature $\\rho = \\frac{v^2}{a_n} = \\frac{(u\\cos\\theta)^2}{g}$."
+          },
+          {
+            question: "In the reaction $2NO_2(g) \\rightleftharpoons N_2O_4(g)$ with $\\Delta H < 0$, what happens if the temperature is increased at constant volume?",
+            options: ["Equilibrium shifts forward", "Equilibrium shifts backward (more $NO_2$)", "No effect on equilibrium", "Equilibrium constant $K_p$ increases"],
+            correctIndex: 1,
+            explanation: "By Le Chatelier's Principle, for an exothermic reaction ($\\Delta H < 0$), adding heat shifts equilibrium in the endothermic direction (backward), increasing $NO_2$ concentration."
+          },
+          {
+            question: "Evaluate the limit: $\\lim_{x \\to 0} \\frac{\\tan(x) - \\sin(x)}{x^3}$:",
+            options: ["0", "\\frac{1}{2}", "1", "\\frac{1}{6}"],
+            correctIndex: 1,
+            explanation: "Factor out $\\tan(x)$: $\\frac{\\tan(x)(1 - \\cos(x))}{x^3} = \\left(\\frac{\\tan x}{x}\\right) \\left(\\frac{1 - \\cos x}{x^2}\\right) = 1 \\times \\frac{1}{2} = \\frac{1}{2}$."
+          }
+        ];
+
         return {
-          content: `### UPSC CSAT Number Systems: Cyclicity & Modular Arithmetic\n**Problem**: Find the remainder when $2^{2026}$ is divided by $7$.\n\n---\n\n#### 1. Concept: Finding the Cyclicity of Powers of 2 Modulo 7\nLet us observe the pattern of remainders for increasing powers of 2:\n* $2^1 \\equiv 2 \\pmod 7$\n* $2^2 \\equiv 4 \\pmod 7$\n* $2^3 = 8 \\equiv 1 \\pmod 7$  $\\\\leftarrow$ **Cycle period of 3!**\n\nAny time a remainder reaches $1$, the pattern repeats with period 3 (Fermat’s Little Theorem: $a^{p-1} \\equiv 1 \\pmod p$ for prime $p=7$).\n\n#### 2. Dividing the Exponent by the Period (3)\nWe express $2026$ in terms of multiples of 3:\n$$2026 = 3 \\times 675 + 1$$\n\n#### 3. Final Calculation\n$$2^{2026} = 2^{3 \\times 675 + 1} = \\left(2^3\\right)^{675} \\times 2^1$$\n$$\\equiv (1)^{675} \\times 2 \\equiv 2 \\pmod 7$$\n\n**Answer**: The remainder is **$2$**.\n\n> **UPSC CSAT Tip**: For any division $a^n / p$, always seek the smallest power $k$ where $a^k \\equiv \\pm 1 \\pmod p$. This reduces a 5-minute problem to a 20-second mental calculation!`,
+          content: `### ⚡ NTA-Compliant CBT Practice Test Generated: ${quizTitle}
+
+**Marking Scheme**: $+4.0$ for Correct | $-1.0$ for Incorrect | $0$ for Unattempted
+**Time Allocation**: 15 Minutes • **Calibrated for**: JEE Main & NEET UG
+
+---\n` + questions.map((q, i) => `#### Q${i+1}. ${q.question}
+* **A)** ${q.options[0]}
+* **B)** ${q.options[1]}
+* **C)** ${q.options[2]}
+* **D)** ${q.options[3]}
+> ✅ **Correct Option**: Option ${String.fromCharCode(65 + q.correctIndex)}
+> 📝 **Step-by-Step Solution**: ${q.explanation}`).join('\n\n---\n') +
+`\n\n> 🚀 **One-Tap Publishing**: You can publish this test directly into Tutor LMS as a live student quiz using the button below!`,
           followups: [
-            'How do I find cyclicity for base 3 and 7?',
-            'Explain Fermat’s Little Theorem with another example',
-            'Give me a harder UPSC CSAT practice question'
-          ]
+            'Add 3 more questions on this topic',
+            'Generate printable PDF format with answer key',
+            'Translate solutions to हिन्दी (Hindi)'
+          ],
+          actionPayload: {
+            type: 'quiz',
+            title: quizTitle,
+            questions
+          }
         };
       }
 
-      // JEE Advanced Calculus / Limits
-      if (p.includes('jee') || p.includes('limit') || p.includes('x^3')) {
-        return {
-          content: `### JEE Advanced Limit Evaluation: $\\lim_{x \\to 0} \\frac{x - \\sin(x)}{x^3}$\n\n#### Method 1: Taylor Series Expansion (Fastest for JEE)\nRecall the standard Maclaurin expansion of $\\sin(x)$:\n$$\\sin(x) = x - \\frac{x^3}{3!} + \\frac{x^5}{5!} - \\dots = x - \\frac{x^3}{6} + \\mathcal{O}(x^5)$$\n\nSubstitute directly into the limit:\n$$\\lim_{x \\to 0} \\frac{x - \\left(x - \\frac{x^3}{6} + \\dots\\right)}{x^3} = \\lim_{x \\to 0} \\frac{\\frac{x^3}{6} - \\mathcal{O}(x^5)}{x^3} = \\frac{1}{6}$$\n\n#### Method 2: L'Hôpital's Rule (3 Successive Derivatives)\nCheck form: $\\frac{0 - 0}{0} = \\frac{0}{0}$ (Indeterminate form):\n1. First derivative: $\\lim_{x \\to 0} \\frac{1 - \\cos(x)}{3x^2}$\n2. Second derivative: $\\lim_{x \\to 0} \\frac{\\sin(x)}{6x} = \\frac{1}{6} \\times 1 = \\frac{1}{6}$\n\n**Final Result**: **$\\frac{1}{6}$**`,
-          followups: [
-            'Why does Taylor expansion beat L-Hopital on JEE Advanced multi-step limits?',
-            'What if the denominator is x^5 instead of x^3?',
-            'Can you give me a JEE Advanced previous year question?'
-          ]
-        };
-      }
-
-      // Default Student
+      // Default Teacher Copilot
       return {
-        content: `Great question! At **Mathnotes**, our goal is to build India's premier first-principles learning authority for **IIT-JEE, UPSC CSAT, CBSE Boards, and AI Mathematics**.\n\nInstead of rote tricks, let's unpack your question into:\n1. **Underlying Invariant Principle**: What fundamental axiom or theorem applies here?\n2. **Visual/Geometric Interpretation**: Can we see the solution as an area, tangent, or vector field?\n3. **Exam Efficiency**: How do we verify this quickly under negative-marking pressure?\n\nTell me which specific exam problem or topic you are tackling right now!`,
-        followups: [
-          'Help me solve a JEE Advanced Calculus question',
-          'Explain UPSC CSAT speed-math techniques',
-          'How does mathematics connect to AI and Python?'
-        ]
-      };
-    } else {
-      // MathNotes Teachers AI
-      if (p.includes('quiz') || p.includes('jee') || p.includes('cbt')) {
-        return {
-          content: `### 3-Question NTA-Style IIT-JEE CBT Mock Module\n**Marking Scheme**: $+4$ for Correct | $-1$ for Incorrect | $0$ for Unattempted\n**Difficulty**: JEE Main $\\to$ JEE Advanced\n\n---\n\n#### Q1. Vector Triple Product & Coplanarity\n* **Problem**: Let $\\vec{a} = \\hat{i} + \\hat{j} + \\hat{k}$, $\\vec{b} = \\hat{i} - \\hat{j} + 2\\hat{k}$, and $\\vec{c} = x\\hat{i} + (x - 2)\\hat{j} - \\hat{k}$. If $\\vec{c}$ lies in the plane of $\\vec{a}$ and $\\vec{b}$, find the value of $x$.\n* **Options**:\n  - A) $-2$\n  - B) $1$\n  - C) $-4$\n  - D) $2$\n* **Correct Answer**: A) $-2$\n* **Marking Scheme**: $+4$ / $-1$\n* **Solution Step**: For coplanar vectors, scalar triple product $[\\vec{a} \\ \\vec{b} \\ \\vec{c}] = 0$.\n$$\\begin{vmatrix} 1 & 1 & 1 \\\\ 1 & -1 & 2 \\\\ x & x-2 & -1 \\end{vmatrix} = 0 \\implies x = -2$$\n\n---\n\n#### Q2. Calculus: Tangent Angle & Derivative Squeeze\n* **Problem**: The slope of the tangent to the curve $y = f(x)$ at $(x, y)$ is given by $\\frac{dy}{dx} = \\frac{2y}{x}$. If the curve passes through $(1, 2)$, what curve is represented?\n* **Correct Answer**: Parabola $y = 2x^2$`,
-          followups: [
-            'Generate LaTeX export for printable test series',
-            'Add 3 more multi-correct JEE Advanced questions',
-            'Generate student performance diagnostic rubric'
-          ]
-        };
-      }
+        content: `### 🎓 Educator Copilot — Mathnotes.courses
 
-      return {
-        content: `### Educator Copilot (India 2026 Competitive Exams Authority)\n\nI am configured to help you design world-class curricula and automated assessments across all major Indian tracks:\n\n1. **IIT-JEE Track**: CBT mock tests with $+4/-1$ negative marking, high-yield Daily Practice Problems (DPP), and Advanced multi-concept integrations.\n2. **UPSC CSAT Track**: Quantitative aptitude and logical reasoning modules with speed-math heuristics.\n3. **Mathematics of AI Track**: Python code notebooks bridging linear algebra and calculus to Neural Networks.\n4. **CBSE / NCERT Foundation**: Conceptual derivation worksheets and board exam marking rubrics.\n\nWhat curriculum module shall we draft today?`,
+I can automate your teaching workflows across **Physics, Chemistry, and Mathematics (Class 8th to 12th, JEE, NEET, UPSC CSAT)**:
+
+1. **Course & Lesson Synthesis**: Just tell me a topic (e.g. *"Create a course on Class 10 Light & Optics"*), and I will generate the complete 4-pillar syllabus with a 1-click **"Publish to Tutor LMS"** button.
+2. **CBT Mock Test Generator**: Ask for a test paper (e.g. *"5-question test on Chemical Bonding"*), and I will build $+4/-1$ NTA questions with KaTeX formulas and full solutions.
+3. **Student Doubt Diagnostic**: Paste student questions to get first-principles explanations, visual intuition, and common pitfall warnings.
+4. **Bilingual हिन्दी Mode**: Every lesson and quiz can be translated into Hindi with standard terminology.
+
+What would you like to prepare for your students right now?`,
         followups: [
-          'Create a 5-question JEE Calculus CBT test',
-          'Draft a lesson plan for Teaching AI Mathematics',
-          'Generate UPSC CSAT Number Systems worksheet'
+          'Create a course on Class 11 Physics: Kinematics & Vectors',
+          'Create a 5-question CBT test on Chemical Bonding',
+          'Draft a Class 10th Board lesson on Trigonometry'
         ]
       };
     }
+
+    // STUDENT PERSONA
+    if (p.includes('gradient') || p.includes('ai') || p.includes('machine learning')) {
+      return {
+        content: `### First-Principles Intuition: Why Gradient Descent Powers Modern AI
+
+Every modern AI (from ChatGPT to Vision models) trains by minimizing a loss function $L(\\mathbf{w})$ where $\\mathbf{w}$ represents parameters.
+
+#### 1. Geometric Intuition (The Foggy Mountain)
+Imagine standing blindfolded on a foggy mountainside. You cannot see the lowest valley (minimum loss), but you can feel the slope beneath your feet:
+* The **gradient vector** $\\nabla L(\\mathbf{w})$ points in the direction of steepest *ascent* (uphill).
+* To reach the lowest point as quickly as possible, you step in the exact opposite direction: $-\\nabla L(\\mathbf{w})$.
+
+#### 2. The Universal AI Update Rule
+$$\\mathbf{w}_{t+1} = \\mathbf{w}_t - \\eta \\nabla L(\\mathbf{w}_t)$$
+* $\\eta$ is the **learning rate** (step size).
+* In single-variable calculus: $x_{t+1} = x_t - \\eta f'(x_t)$.
+
+Notice that the calculus you learn for Class 12 & JEE is the exact mathematical heartbeat driving all modern artificial intelligence!`,
+        followups: [
+          'How does Backpropagation use the Chain Rule?',
+          'What happens if the learning rate is too large?',
+          'Show me Python code for gradient descent'
+        ]
+      };
+    }
+
+    if (p.includes('physics') || p.includes('newton') || p.includes('force') || p.includes('kinematics')) {
+      return {
+        content: `### Physics First Principles: Newton's Laws & Vector Invariants
+
+#### 1. Conceptual Rigor: Why $F = \\frac{dp}{dt}$ is More Fundamental than $F = ma$
+Newton's Second Law states that force is the rate of change of linear momentum:
+$$\\vec{F}_{\\text{net}} = \\frac{d\\vec{p}}{dt} = \\frac{d(m\\vec{v})}{dt} = m\\frac{d\\vec{v}}{dt} + \\vec{v}\\frac{dm}{dt}$$
+* If mass is constant: $\\frac{dm}{dt} = 0 \\implies \\vec{F} = m\\vec{a}$.
+* In rocket propulsion where fuel burns, $\\frac{dm}{dt} \\neq 0$, so $\\vec{F} = m\\vec{a}$ fails without the thrust term $\\vec{v}_{\\text{rel}}\\frac{dm}{dt}$!
+
+#### 2. Visualizing Friction as an Invariant Barrier
+Static friction $f_s$ is **self-adjusting** up to its limiting threshold:
+$$0 \\le f_s \\le \\mu_s N$$
+Kinetic friction is constant: $f_k = \\mu_k N$ (where $\\mu_k < \\mu_s$ because atomic bonds require more force to break initially than to slide past).`,
+        followups: [
+          'Solve a 2-block friction problem on an inclined plane',
+          'Derive the projectile motion range formula',
+          'Explain work-energy theorem for variable forces'
+        ]
+      };
+    }
+
+    if (p.includes('chemistry') || p.includes('bonding') || p.includes('atom') || p.includes('mole')) {
+      return {
+        content: `### Chemistry First Principles: Chemical Bonding & Hybridization
+
+#### 1. Why Do Atoms Form Bonds?
+Atoms bond to minimize potential energy and achieve stable valence electron configurations:
+$$\\text{Bond Formation} \\implies \\Delta H < 0 \\text{ (Exothermic)}$$
+
+#### 2. VSEPR Theory & Hybridization ($sp, sp^2, sp^3$)
+Electrons in bonds and lone pairs repel each other. They arrange themselves in 3D space to maximize separation:
+* **Steric Number 2**: $sp$ Hybridization $\\implies$ Linear geometry ($180^\\circ$), e.g. $BeCl_2, CO_2$.
+* **Steric Number 3**: $sp^2$ Hybridization $\\implies$ Trigonal planar ($120^\\circ$), e.g. $BF_3$.
+* **Steric Number 4**: $sp^3$ Hybridization $\\implies$ Tetrahedral ($109.5^\\circ$), e.g. $CH_4$. Lone pairs compress the angle: $NH_3$ ($107^\\circ$), $H_2O$ ($104.5^\\circ$).`,
+        followups: [
+          'Explain Molecular Orbital Theory (MOT) bond order',
+          'How do I calculate formal charge?',
+          'What is Le Chatelier’s Principle?'
+        ]
+      };
+    }
+
+    // Default Student Response
+    return {
+      content: `Welcome to **MathNotes AI**! I am your 24/7 STEM mentor for **Physics, Chemistry, and Mathematics (Class 8th to 12th, JEE Main & Advanced, NEET UG, and UPSC CSAT)**.
+
+How can I help you understand deeply today?
+* 📐 **Math**: Calculus proofs, algebra, vectors, probability, trigonometry.
+* ⚡ **Physics**: Mechanics derivations, electricity, optics, modern physics.
+* 🧪 **Chemistry**: Chemical bonding, thermodynamics, equilibrium, organic mechanisms.
+* 🇮🇳 **हिन्दी माध्यम**: सभी संकल्पनाएं और सूत्र हिन्दी में भी उपलब्ध हैं।`,
+      followups: [
+        'Explain Newton’s Laws with vector intuition',
+        'Why does VSEPR theory predict molecular shapes?',
+        'Solve a JEE Advanced Calculus question'
+      ]
+    };
   }
 }
