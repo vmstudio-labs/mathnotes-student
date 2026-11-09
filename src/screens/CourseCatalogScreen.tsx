@@ -7,31 +7,37 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
+  SafeAreaView,
+  StatusBar,
+  Platform,
 } from 'react-native';
-import { Search, Star, Clock, BookOpen, Globe } from 'lucide-react-native';
+import { Search, Star, Clock, BookOpen } from 'lucide-react-native';
 import { Course } from '../shared/types';
 import { ApiService } from '../shared/services/apiService';
-import { translations, SupportedLanguage } from '../shared/i18n/translations';
-
-const SUBJECT_FILTERS = [
-  { id: 'all', labelEn: 'All STEM', labelHi: 'à¤¸à¤­à¥€ à¤µà¤¿à¤·à¤¯' },
-  { id: 'physics', labelEn: 'Physics', labelHi: 'à¤­à¥Œà¤¤à¤¿à¤• à¤µà¤¿à¤œà¥à¤žà¤¾à¤¨' },
-  { id: 'chemistry', labelEn: 'Chemistry', labelHi: 'à¤°à¤¸à¤¾à¤¯à¤¨ à¤µà¤¿à¤œà¥à¤žà¤¾à¤¨' },
-  { id: 'math', labelEn: 'Mathematics', labelHi: 'à¤—à¤£à¤¿à¤¤' },
-  { id: 'class10', labelEn: 'Class 10th', labelHi: 'à¤•à¤•à¥à¤·à¤¾ 10 à¤¬à¥‹à¤°à¥à¤¡' },
-  { id: 'class8', labelEn: 'Class 8th', labelHi: 'à¤•à¤•à¥à¤·à¤¾ 8à¤µà¥€à¤‚' },
-  { id: 'jeeneet', labelEn: 'JEE & NEET', labelHi: 'à¤†à¤ˆà¤†à¤ˆà¤Ÿà¥€ à¤µ à¤¨à¥€à¤Ÿ' },
-];
+import { useLanguage } from '../shared/i18n/LanguageContext';
+import { useTheme } from '../shared/theme/ThemeContext';
+import { AppHeaderControls } from '../shared/components/AppHeaderControls';
+import { GlassCard, LiquidGlassTokens } from '../shared/components/glass';
 
 export const CourseCatalogScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
-  const [lang, setLang] = useState<SupportedLanguage>('en');
   const api = ApiService.getInstance();
-  const dict = translations[lang];
+  const { t, isHindi } = useLanguage();
+  const { isDark, colors } = useTheme();
+
+  const SUBJECT_FILTERS = [
+    { id: 'all', label: isHindi ? 'सभी विषय' : 'All STEM' },
+    { id: 'physics', label: isHindi ? 'भौतिक विज्ञान' : 'Physics' },
+    { id: 'chemistry', label: isHindi ? 'रसायन विज्ञान' : 'Chemistry' },
+    { id: 'math', label: isHindi ? 'गणित' : 'Mathematics' },
+    { id: 'class10', label: isHindi ? 'कक्षा 10वीं' : 'Class 10th' },
+    { id: 'class8', label: isHindi ? 'कक्षा 8वीं' : 'Class 8th' },
+    { id: 'jeeneet', label: isHindi ? 'आईआईटी व नीट' : 'JEE & NEET' },
+  ];
 
   useEffect(() => {
     api.getCourses().then(data => {
@@ -63,15 +69,15 @@ export const CourseCatalogScreen: React.FC<{ navigation: any }> = ({ navigation 
     // Subject Filter matching
     let matchesCategory = true;
     if (selectedFilter === 'physics') {
-      matchesCategory = subj.includes('physics') || title.includes('physics') || title.includes('à¤­à¥Œà¤¤à¤¿à¤•') || title.includes('kinematics');
+      matchesCategory = subj.includes('physics') || title.includes('physics') || title.includes('भौतिक') || title.includes('kinematics') || title.includes('optics');
     } else if (selectedFilter === 'chemistry') {
-      matchesCategory = subj.includes('chemistry') || title.includes('chemistry') || title.includes('à¤°à¤¸à¤¾à¤¯à¤¨') || title.includes('bonding');
+      matchesCategory = subj.includes('chemistry') || title.includes('chemistry') || title.includes('रसायन') || title.includes('bonding') || title.includes('equilibrium');
     } else if (selectedFilter === 'math') {
-      matchesCategory = subj.includes('calculus') || subj.includes('algebra') || subj.includes('geometry') || subj.includes('math') || title.includes('math') || title.includes('à¤—à¤£à¤¿à¤¤');
+      matchesCategory = subj.includes('calculus') || subj.includes('algebra') || subj.includes('geometry') || subj.includes('math') || title.includes('math') || title.includes('गणित') || title.includes('समाकलन');
     } else if (selectedFilter === 'class10') {
-      matchesCategory = subj.includes('10') || title.includes('class 10') || title.includes('à¤•à¤•à¥à¤·à¤¾ 10');
+      matchesCategory = subj.includes('10') || title.includes('class 10') || title.includes('कक्षा 10');
     } else if (selectedFilter === 'class8') {
-      matchesCategory = subj.includes('8') || title.includes('class 8') || title.includes('à¤•à¤•à¥à¤·à¤¾ 8');
+      matchesCategory = subj.includes('8') || title.includes('class 8') || title.includes('कक्षा 8');
     } else if (selectedFilter === 'jeeneet') {
       matchesCategory = title.includes('jee') || title.includes('neet') || subj.includes('jee') || subj.includes('neet');
     }
@@ -81,275 +87,236 @@ export const CourseCatalogScreen: React.FC<{ navigation: any }> = ({ navigation 
   });
 
   return (
-    <View style={styles.container}>
-      {/* Search Header & Language Switcher */}
-      <View style={styles.headerRow}>
-        <View style={styles.searchBarContainer}>
-          <Search color="#64748B" size={18} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder={lang === 'hi' ? 'à¤…à¤§à¥à¤¯à¤¾à¤¯, à¤¸à¥‚à¤¤à¥à¤° à¤¯à¤¾ à¤µà¤¿à¤·à¤¯ à¤–à¥‹à¤œà¥‡à¤‚...' : 'Search topics, formulas, or subjects...'}
-            placeholderTextColor="#64748B"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.canvas }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.canvas} />
+      <View style={[styles.container, { backgroundColor: colors.canvas }]}>
+        {/* Top Controls Row */}
+        <View style={styles.topBar}>
+          <Text style={[styles.screenTitle, { color: colors.textPrimary }]}>
+            {isHindi ? 'पाठ्यक्रम कैटलॉग' : 'Course Catalog'}
+          </Text>
+          <AppHeaderControls />
         </View>
 
-        <TouchableOpacity
-          style={styles.langToggle}
-          onPress={() => setLang(prev => (prev === 'en' ? 'hi' : 'en'))}
-          activeOpacity={0.8}
-        >
-          <Globe color="#38BDF8" size={15} />
-          <Text style={styles.langToggleText}>{lang === 'en' ? 'à¤¹à¤¿à¤¨à¥à¤¦à¥€' : 'EN'}</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* STEM Filter Chips */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.filterList}
-      >
-        {SUBJECT_FILTERS.map(filter => {
-          const isSelected = selectedFilter === filter.id;
-          return (
-            <TouchableOpacity
-              key={filter.id}
-              style={[styles.filterChip, isSelected && styles.filterChipActive]}
-              onPress={() => setSelectedFilter(filter.id)}
-            >
-              <Text style={[styles.filterText, isSelected && styles.filterTextActive]}>
-                {lang === 'hi' ? filter.labelHi : filter.labelEn}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
-
-      {/* Course List */}
-      <ScrollView contentContainerStyle={styles.courseList} showsVerticalScrollIndicator={false}>
-        {loading ? (
-          <ActivityIndicator size="large" color="#38BDF8" style={{ marginTop: 40 }} />
-        ) : filteredCourses.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>
-              {lang === 'hi' ? 'à¤•à¥‹à¤ˆ à¤ªà¤¾à¤ à¥à¤¯à¤•à¥à¤°à¤® à¤¨à¤¹à¥€à¤‚ à¤®à¤¿à¤²à¤¾' : 'No matching courses found'}
-            </Text>
-            <Text style={styles.emptySubtitle}>
-              {lang === 'hi' ? 'à¤­à¥Œà¤¤à¤¿à¤•à¥€, à¤°à¤¸à¤¾à¤¯à¤¨ à¤µà¤¿à¤œà¥à¤žà¤¾à¤¨ à¤¯à¤¾ à¤•à¤•à¥à¤·à¤¾ 10-12 à¤–à¥‹à¤œà¥‡à¤‚' : 'Try searching Physics, Chemistry, or Class 8-12'}
-            </Text>
+        {/* Search Bar */}
+        <View style={styles.searchWrap}>
+          <View style={[styles.searchBarContainer, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}>
+            <Search color={colors.textSecondary} size={18} />
+            <TextInput
+              style={[styles.searchInput, { color: colors.textPrimary }]}
+              placeholder={t.searchPlaceholder}
+              placeholderTextColor={colors.textMuted}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
           </View>
-        ) : (
-          filteredCourses.map(course => {
-            const courseTitle = getCourseTitle(course);
-            const courseExcerpt = getCourseExcerpt(course);
-            return (
-              <TouchableOpacity
+        </View>
+
+        {/* Filter Pills */}
+        <View style={styles.filterSection}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScroll}>
+            {SUBJECT_FILTERS.map(f => {
+              const active = selectedFilter === f.id;
+              return (
+                <TouchableOpacity
+                  key={f.id}
+                  style={[
+                    styles.filterPill,
+                    { backgroundColor: active ? colors.accentSapphire : colors.pillBg, borderColor: active ? colors.accentSapphire : colors.pillBorder }
+                  ]}
+                  onPress={() => setSelectedFilter(f.id)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={[styles.filterText, { color: active ? '#FFFFFF' : colors.textSecondary, fontWeight: active ? '800' : '600' }]}>
+                    {f.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+
+        {/* Courses Feed */}
+        <ScrollView contentContainerStyle={styles.catalogScroll} showsVerticalScrollIndicator={false}>
+          {loading ? (
+            <ActivityIndicator size="large" color={colors.accentCyan} style={{ marginTop: 40 }} />
+          ) : filteredCourses.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
+                {isHindi ? 'कोई पाठ्यक्रम नहीं मिला' : 'No courses found'}
+              </Text>
+              <Text style={[styles.emptySub, { color: colors.textSecondary }]}>
+                {isHindi ? 'कृपया अन्य विषय या कीवर्ड खोजें।' : 'Try selecting another STEM subject filter.'}
+              </Text>
+            </View>
+          ) : (
+            filteredCourses.map(course => (
+              <GlassCard
                 key={course.id}
-                style={styles.card}
                 onPress={() => navigation.navigate('CourseDetail', { courseId: course.id })}
-                activeOpacity={0.85}
+                style={styles.courseCard}
+                contentStyle={styles.courseCardContent}
+                glowColor={colors.accentCyan}
               >
-                <Image source={{ uri: course.thumbnailUrl }} style={styles.thumbnail} />
-                <View style={styles.cardBody}>
-                  <View style={styles.badgeRow}>
-                    <Text style={styles.subjectBadge}>{course.subject}</Text>
-                    <Text style={styles.levelBadge}>{course.level}</Text>
-                    <Text style={styles.freeBadge}>
-                      {lang === 'hi' ? 'à¤®à¥à¤«à¥à¤¤ à¤…à¤§à¥à¤¯à¤¯à¤¨' : 'Free Access'}
-                    </Text>
+                <Image source={{ uri: course.thumbnailUrl }} style={styles.courseThumb} />
+                <View style={styles.courseInfo}>
+                  <View style={[styles.badgePill, { backgroundColor: isDark ? 'rgba(56, 189, 248, 0.15)' : 'rgba(2, 132, 199, 0.12)' }]}>
+                    <Text style={[styles.badgePillText, { color: colors.accentCyan }]}>{course.subject}</Text>
                   </View>
-                  <Text style={styles.title} numberOfLines={2}>{courseTitle}</Text>
-                  <Text style={styles.excerpt} numberOfLines={2}>{courseExcerpt}</Text>
-                  
-                  <View style={styles.footerRow}>
-                    <View style={styles.metaPair}>
+                  <Text style={[styles.courseHeading, { color: colors.textPrimary }]} numberOfLines={2}>
+                    {getCourseTitle(course)}
+                  </Text>
+                  <Text style={[styles.courseDesc, { color: colors.textSecondary }]} numberOfLines={2}>
+                    {getCourseExcerpt(course)}
+                  </Text>
+                  <View style={styles.courseStats}>
+                    <View style={styles.statItem}>
                       <Star color="#F59E0B" size={13} fill="#F59E0B" />
-                      <Text style={styles.metaVal}>{course.rating}</Text>
+                      <Text style={[styles.statText, { color: colors.textSecondary }]}>{course.rating}</Text>
                     </View>
-                    <View style={styles.metaPair}>
-                      <BookOpen color="#94A3B8" size={13} />
-                      <Text style={styles.metaVal}>
-                        {course.totalLessons} {lang === 'hi' ? 'à¤ªà¤¾à¤ ' : 'Lessons'}
-                      </Text>
-                    </View>
-                    <View style={styles.metaPair}>
-                      <Clock color="#94A3B8" size={13} />
-                      <Text style={styles.metaVal}>{course.duration}</Text>
+                    <View style={styles.statItem}>
+                      <BookOpen color={colors.textSecondary} size={13} />
+                      <Text style={[styles.statText, { color: colors.textSecondary }]}>24 {isHindi ? 'पाठ' : 'Lessons'}</Text>
                     </View>
                   </View>
                 </View>
-              </TouchableOpacity>
-            );
-          })
-        )}
-      </ScrollView>
-    </View>
+              </GlassCard>
+            ))
+          )}
+          <View style={{ height: 40 }} />
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 0,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
   },
-  headerRow: {
+  topBar: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    marginTop: 14,
-    gap: 10,
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
+  screenTitle: {
+    fontSize: 22,
+    fontWeight: '900',
+    letterSpacing: -0.5,
+  },
+  searchWrap: {
+    paddingHorizontal: 16,
+    marginTop: 8,
+    marginBottom: 12,
   },
   searchBarContainer: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1E293B',
-    borderRadius: 14,
-    paddingHorizontal: 14,
     borderWidth: 1,
-    borderColor: '#334155',
-    gap: 10,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 8,
   },
   searchInput: {
     flex: 1,
-    color: '#F8FAFC',
     fontSize: 14,
-    paddingVertical: 10,
+    padding: 0,
   },
-  langToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: '#1E293B',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#38BDF8',
+  filterSection: {
+    marginBottom: 14,
   },
-  langToggleText: {
-    color: '#38BDF8',
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  filterList: {
+  filterScroll: {
     paddingHorizontal: 16,
-    paddingVertical: 12,
     gap: 8,
   },
-  filterChip: {
-    backgroundColor: '#1E293B',
+  filterPill: {
     paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingVertical: 7,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#334155',
-  },
-  filterChipActive: {
-    backgroundColor: '#2563EB',
-    borderColor: '#38BDF8',
   },
   filterText: {
-    color: '#94A3B8',
     fontSize: 12,
-    fontWeight: '600',
   },
-  filterTextActive: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
-  courseList: {
+  catalogScroll: {
     paddingHorizontal: 16,
     paddingBottom: 24,
-    gap: 16,
   },
-  card: {
-    backgroundColor: '#1E293B',
-    borderRadius: 18,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#334155',
+  courseCard: {
+    marginBottom: 14,
   },
-  thumbnail: {
-    width: '100%',
-    height: 150,
-  },
-  cardBody: {
-    padding: 16,
-  },
-  badgeRow: {
+  courseCardContent: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
+    padding: 12,
+    gap: 12,
   },
-  subjectBadge: {
-    backgroundColor: '#0F172A',
-    color: '#38BDF8',
-    fontSize: 11,
-    fontWeight: '700',
+  courseThumb: {
+    width: 85,
+    height: 85,
+    borderRadius: 12,
+    backgroundColor: '#1E293B',
+  },
+  courseInfo: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  badgePill: {
+    alignSelf: 'flex-start',
     paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  levelBadge: {
-    backgroundColor: 'rgba(56, 189, 248, 0.1)',
-    color: '#94A3B8',
-    fontSize: 10.5,
-    fontWeight: '600',
-    paddingHorizontal: 7,
     paddingVertical: 2,
     borderRadius: 6,
+    marginBottom: 4,
   },
-  freeBadge: {
-    color: '#10B981',
-    fontSize: 11,
+  badgePillText: {
+    fontSize: 10,
+    fontWeight: '800',
+    textTransform: 'uppercase',
+  },
+  courseHeading: {
+    fontSize: 14,
     fontWeight: '700',
-    marginLeft: 'auto',
-  },
-  title: {
-    color: '#F8FAFC',
-    fontSize: 16,
-    fontWeight: '700',
-    marginBottom: 6,
-  },
-  excerpt: {
-    color: '#94A3B8',
-    fontSize: 13,
     lineHeight: 18,
-    marginBottom: 12,
   },
-  footerRow: {
+  courseDesc: {
+    fontSize: 11.5,
+    lineHeight: 15,
+    marginTop: 2,
+  },
+  courseStats: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#334155',
-    paddingTop: 10,
+    gap: 12,
+    marginTop: 6,
   },
-  metaPair: {
+  statItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
   },
-  metaVal: {
-    color: '#94A3B8',
-    fontSize: 12,
+  statText: {
+    fontSize: 11,
+    fontWeight: '600',
   },
-  emptyContainer: {
+  emptyState: {
     alignItems: 'center',
-    paddingTop: 60,
+    marginTop: 60,
+    paddingHorizontal: 24,
   },
   emptyTitle: {
-    color: '#F8FAFC',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '800',
+    marginBottom: 6,
   },
-  emptySubtitle: {
-    color: '#64748B',
+  emptySub: {
     fontSize: 13,
-    marginTop: 4,
+    textAlign: 'center',
   },
 });
