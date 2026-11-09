@@ -5,10 +5,10 @@ import {
   ViewStyle,
   StyleProp,
   TouchableOpacity,
-  TouchableOpacityProps,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { LiquidGlassTokens } from './LiquidGlassTokens';
+import { useTheme } from '../../theme/ThemeContext';
 
 export interface GlassCardProps {
   children: React.ReactNode;
@@ -31,22 +31,36 @@ export const GlassCard: React.FC<GlassCardProps> = ({
   onPress,
   activeOpacity = 0.85,
 }) => {
+  let isDark = true;
+  try {
+    const theme = useTheme();
+    if (theme && typeof theme.isDark === 'boolean') {
+      isDark = theme.isDark;
+    }
+  } catch (e) {
+    // fallback to dark
+  }
+
   const borderColors: [string, string, ...string[]] = borderGradientColors || [
     glowColor
       ? `${glowColor}55`
-      : LiquidGlassTokens.colors.specularTop,
-    LiquidGlassTokens.colors.specularMid,
-    LiquidGlassTokens.colors.specularBottom,
+      : isDark
+      ? LiquidGlassTokens.colors.specularTop
+      : 'rgba(255, 255, 255, 0.95)',
+    isDark ? LiquidGlassTokens.colors.specularMid : 'rgba(226, 232, 240, 0.8)',
+    isDark ? LiquidGlassTokens.colors.specularBottom : 'rgba(203, 213, 225, 0.5)',
   ];
+
+  const glassBg = isDark ? LiquidGlassTokens.colors.glassMedium : 'rgba(255, 255, 255, 0.92)';
 
   const renderContent = () => (
     <LinearGradient
       colors={borderColors}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
-      style={[styles.specularBorder, style]}
+      style={[styles.specularBorder, isDark ? styles.shadowDark : styles.shadowLight, style]}
     >
-      <View style={[styles.glassCore, contentStyle]}>
+      <View style={[styles.glassCore, { backgroundColor: glassBg }, contentStyle]}>
         {glowColor && (
           <View
             style={[
@@ -84,13 +98,25 @@ const styles = StyleSheet.create({
     borderRadius: LiquidGlassTokens.radius.lg,
   },
   specularBorder: {
-    padding: 1.2, // 1.2px border highlight
+    padding: 1.2,
     borderRadius: LiquidGlassTokens.radius.lg,
-    ...LiquidGlassTokens.shadows.glassElevated,
+  },
+  shadowDark: {
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.45,
+    shadowRadius: 24,
+    elevation: 10,
+  },
+  shadowLight: {
+    shadowColor: '#0f172a',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 4,
   },
   glassCore: {
     borderRadius: LiquidGlassTokens.radius.lg - 1,
-    backgroundColor: LiquidGlassTokens.colors.glassMedium,
     padding: 16,
     overflow: 'hidden',
     position: 'relative',
