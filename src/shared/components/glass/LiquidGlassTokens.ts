@@ -1,9 +1,14 @@
-// Liquid Glass Design System Tokens
+// Liquid Glass Design System Tokens (Dark & Light Mode Support)
+
 export const LiquidGlassTokens = {
   colors: {
-    // Base Canvas
+    // Base Canvas (Dark)
     canvas: '#07090E',
     canvasElevated: '#0B0F19',
+
+    // Base Canvas (Light)
+    canvasLight: '#F8FAFC',
+    canvasElevatedLight: '#FFFFFF',
 
     // Glass Translucent Acrylic Surfaces
     glassLight: 'rgba(255, 255, 255, 0.05)',
@@ -11,7 +16,11 @@ export const LiquidGlassTokens = {
     glassDark: 'rgba(8, 12, 22, 0.82)',
     glassModal: 'rgba(11, 15, 25, 0.94)',
 
-    // Specular Highlight Gradients (Top border sheen)
+    // Light Mode Glass
+    glassLightMode: 'rgba(255, 255, 255, 0.92)',
+    glassBorderLight: 'rgba(15, 23, 42, 0.08)',
+
+    // Specular Highlight Gradients
     specularTop: 'rgba(255, 255, 255, 0.22)',
     specularMid: 'rgba(255, 255, 255, 0.06)',
     specularBottom: 'rgba(255, 255, 255, 0.01)',
@@ -24,11 +33,11 @@ export const LiquidGlassTokens = {
     accentAmber: '#F59E0B',
     accentRose: '#F43F5E',
 
-    // Ambient Aurora Underglow
-    auroraCyan: 'rgba(56, 189, 248, 0.16)',
-    auroraViolet: 'rgba(139, 92, 246, 0.18)',
-    auroraEmerald: 'rgba(16, 185, 129, 0.12)',
-    auroraRose: 'rgba(244, 63, 94, 0.12)',
+    // Text Colors
+    textDarkPrimary: '#FFFFFF',
+    textDarkSecondary: '#94A3B8',
+    textLightPrimary: '#0F172A',
+    textLightSecondary: '#475569',
   },
 
   radius: {
@@ -46,6 +55,13 @@ export const LiquidGlassTokens = {
       shadowOpacity: 0.45,
       shadowRadius: 24,
       elevation: 10,
+    },
+    glassElevatedLight: {
+      shadowColor: '#0f172a',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.08,
+      shadowRadius: 16,
+      elevation: 4,
     },
     neonGlow: (color: string) => ({
       shadowColor: color,
